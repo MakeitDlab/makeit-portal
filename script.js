@@ -1,7 +1,16 @@
 // Make it Digital - Kanban Board e Logica Dati Condivisa
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+var firebaseConfig = {
+  apiKey: "AIzaSyD0Fhghm_mH3-P9cY7V3HPyH14MSZtricw",
+  authDomain: "makeit-digital.firebaseapp.com",
+  projectId: "makeit-digital",
+  storageBucket: "makeit-digital.firebasestorage.app",
+  messagingSenderId: "758689562925",
+  appId: "1:758689562925:web:3302cab05098f91cf7d3a4"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.firestore();    
     // ======== SIMULAZIONE DATABASE (LocalStorage) ========
     const DB_KEY = 'make_it_digital_jobs_db';
     
