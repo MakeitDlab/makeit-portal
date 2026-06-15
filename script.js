@@ -149,7 +149,7 @@ db.collection('casi')
 .catch(err => {
     console.error(err);
 });
-                    }
+                    
                     
                     draggedItem.style.transform = 'scale(1.05)';
                     setTimeout(() => draggedItem.style.transform = 'scale(1)', 200);
