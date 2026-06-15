@@ -14,18 +14,38 @@ var db = firebase.firestore();
     // ======== SIMULAZIONE DATABASE (LocalStorage) ========
     const DB_KEY = 'make_it_digital_jobs_db';
     
-    // Inizializza o carica i dati
-    function loadJobs() {
-        const data = localStorage.getItem(DB_KEY);
-        if (data) return JSON.parse(data);
-        
-        // Dati finti dimostrativi iniziali (solo se il db è vuoto)
-        return [
-            { id: "RX-409", tag: "SDIMatrix", tagClass: "tag-sdimatrix", patient: "Rossi Mario", doctor: "Dr. Bianchi - Studio ABCD", time: "09:30", status: "ricevuto" },
-            { id: "RX-410", tag: "Protesi Fissa", tagClass: "tag-protesi", patient: "Verdi Elena", doctor: "Clinica Sorriso", time: "11:15", status: "ricevuto" },
-            { id: "RX-405", tag: "Dispositivo ATM", tagClass: "tag-atm", patient: "Gialli Luca", doctor: "Studio D'Amico", time: "Ieri", status: "cad" }
-        ];
+   // Carica i casi reali da Firestore
+function loadJobs() {
+    return [];
+}
+
+async function loadJobsFromFirestore() {
+    try {
+        const snapshot = await db.collection('casi').orderBy('createdAt', 'desc').limit(20).get();
+
+        window.AppJobs = [];
+
+        snapshot.forEach(doc => {
+            const c = doc.data();
+
+            window.AppJobs.push({
+                id: c.id || c.caseId || doc.id,
+                tag: c.tipo || 'Caso',
+                tagClass: 'tag-sdimatrix',
+                patient: c.paziente || c.studio || 'Senza nome',
+                doctor: c.medico || c.studio || 'Studio non indicato',
+                time: c.createdAt ? new Date(c.createdAt).toLocaleDateString('it-IT') : '-',
+                status: c.status || 'ricevuto'
+            });
+        });
+
+        renderKanban();
+        updateCounts();
+
+    } catch (error) {
+        console.error('Errore lettura Firestore:', error);
     }
+}
 
     function saveJobs(jobsArray) {
         localStorage.setItem(DB_KEY, JSON.stringify(jobsArray));
@@ -33,6 +53,7 @@ var db = firebase.firestore();
 
     // Variabile Globale contenente tutti i lavori in base al DB
     window.AppJobs = loadJobs();
+loadJobsFromFirestore();
 
     // Se ci troviamo sulla Kanban Board (il contenitore .kanban-board esiste)
     const board = document.querySelector('.kanban-board');
