@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portale Medici - Make it Digital</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Stili specifici per la pagina upload */
+    .upload-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2.5rem;
+      backdrop-filter: var(--glass-blur);
+    }
+    
+    .view-title { font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem;}
+    .view-desc { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.9rem;}
+
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; color: #fff; font-size: 0.9rem; font-weight: 500;}
+    .form-control { width: 100%; padding: 0.75rem 1rem; background: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 8px; color: #fff; font-family: 'Inter'; }
+    .form-control:focus { outline: none; border-color: var(--neon-cyan); }
+
+    .drop-area {
+      border: 2px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      background: rgba(255,255,255,0.01);
+      cursor: pointer;
+    }
+    .drop-area:hover, .drop-area.dragover {
+      border-color: var(--neon-cyan);
+      background: rgba(6, 182, 212, 0.05);
+    }
+    .drop-icon { font-size: 3rem; color: var(--neon-cyan); margin-bottom: 1rem; }
+    .drop-title { color: #fff; font-size: 1.1rem; margin-bottom: 0.5rem; font-weight: 600;}
+    .drop-sub { color: var(--text-muted); font-size: 0.85rem; }
+    
+    .actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+    .btn-outline { background: transparent; border: 1px solid var(--border-color); color: #fff; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer;}
+    .btn-outline:hover { background: rgba(255,255,255,0.05); }
+
+    /* Fake Nav Header specfico per questo portale */
+    .portal-header {
+      display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 3rem; border-bottom: 1px solid var(--border-color); background: var(--bg-dark);
+    }
+  </style>
+</head>
+<body style="overflow-y: auto;">
+
+  <!-- Header Portale -->
+  <header class="portal-header">
+    <div class="logo">
+      <i class="fa-solid fa-tooth logo-icon"></i>
+      <span>Make it Digital - Portale Cliniche</span>
+    </div>
+    <div class="user-profile">
+      <div class="user-info" style="align-items: flex-end;">
+        <span class="name">Clinica Dr. Sorriso</span>
+        <span class="role">Torino (TO)</span>
+      </div>
+      <div class="avatar" style="background: var(--neon-cyan)"><i class="fa-solid fa-user-doctor"></i></div>
+    </div>
+  </header>
+
+  <!-- Area Upload Form -->
+  <main class="upload-container">
+    <h2 class="view-title">Invia Nuova Prescrizione</h2>
+    <p class="view-desc">I tuoi file saranno trasmessi in modo sicuro e arriveranno direttamente nel software del laboratorio. Addio WeTransfer / MEGA!</p>
+
+    <div class="form-group">
+      <label>Nome Paziente o Riferimento</label>
+      <input type="text" id="in-paziente" class="form-control" placeholder="Es. Mario Rossi o ID-1234">
+    </div>
+
+    <div class="form-group">
+      <label>Tipo di Lavoro Richiesto</label>
+      <select id="in-tipo" class="form-control">
+        <option>Diagnosi SDIMatrix + Modello 3D</option>
+        <option>Dispositivo Disfunzione ATM</option>
+        <option>Protesi Fissa su Impianti</option>
+        <option>Faccette Estetiche</option>
+        <option>Altro...</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>File Protetti (Impronte STL, TAC DICOM, Video SDIMatrix)</label>
+      <div class="drop-area" id="dropArea">
+        <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
+        <div class="drop-title">Trascina qui i tuoi file (STL, PLY, ZIP)</div>
+        <div class="drop-sub">Oppure clicca per cercare i file nel computer. Limite: 5GB.</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-outline" onclick="window.location.href='index.html'">Indietro (Torna al Laboratorio)</button>
+      <button type="button" class="btn btn-primary" id="btn-invia-caso">
+        <i class="fa-solid fa-paper-plane"></i> Invia Caso al Laboratorio
+      </button>
+    </div>
+  </main>
+
+  <script>
+    // Semplice effetto hover per l'area drag&drop
+    const dropArea = document.getElementById('dropArea');
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+      dropArea.addEventListener(eventName,() => dropArea.classList.add('dragover'), false);
+    });
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropArea.addEventListener(eventName, preventDefaults, false);
+      dropArea.addEventListener(eventName,() => dropArea.classList.remove('dragover'), false);
+    });
+    function preventDefaults (e) { e.preventDefault(); e.stopPropagation(); }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
