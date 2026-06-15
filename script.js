@@ -134,6 +134,17 @@ loadJobsFromFirestore();
                     if (jobIndex > -1) {
                         window.AppJobs[jobIndex].status = newStatus;
                         saveJobs(window.AppJobs);
+                      db.collection('casi')
+.doc(jobId)
+.update({
+    status: newStatus
+})
+.then(() => {
+    console.log('Status aggiornato Firestore');
+})
+.catch(err => {
+    console.error(err);
+});
                     }
                     
                     draggedItem.style.transform = 'scale(1.05)';
