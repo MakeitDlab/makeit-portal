@@ -137,8 +137,9 @@ loadJobsFromFirestore();
                       db.collection('casi')
 .doc(jobId)
 .update({
-    status: newStatus
-})
+    status: newStatus,
+    lastUpdate: new Date().toISOString(),
+    updatedBy: "Tony"
 .then(() => {
     console.log('Status aggiornato Firestore');
 })
