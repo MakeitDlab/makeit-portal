@@ -131,15 +131,18 @@ loadJobsFromFirestore();
                     
                     // Aggiorna Database Globale!
                     const jobIndex = window.AppJobs.findIndex(j => j.id === jobId);
-                    if (jobIndex > -1) {
-                        window.AppJobs[jobIndex].status = newStatus;
-                        saveJobs(window.AppJobs);
-                      db.collection('casi')
+                   if (jobIndex > -1) {
+    window.AppJobs[jobIndex].status = newStatus;
+    saveJobs(window.AppJobs);
+}
+
+db.collection('casi')
 .doc(jobId)
 .update({
     status: newStatus,
     lastUpdate: new Date().toISOString(),
     updatedBy: "Tony"
+})
 .then(() => {
     console.log('Status aggiornato Firestore');
 })
