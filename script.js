@@ -141,7 +141,13 @@ db.collection('casi')
 .update({
     status: newStatus,
     lastUpdate: new Date().toISOString(),
-    updatedBy: "Tony"
+    updatedBy: "Tony",
+    history: firebase.firestore.FieldValue.arrayUnion({
+        action: "status_change",
+        to: newStatus,
+        user: "Tony",
+        timestamp: new Date().toISOString()
+    })
 })
 .then(() => {
     console.log('Status aggiornato Firestore');
